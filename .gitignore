@@ -1,0 +1,25 @@
+# Build output
+bin/
+obj/
+
+# User-specific files
+*.user
+*.rsuser
+*.suo
+
+# IDE files
+.vs/
+.vscode/
+
+# Environment files
+.env
+
+# Test output
+TestResults/
+coverage/
+
+# Logs
+*.log
+
+# Docker overrides
+docker-compose.override.yml
