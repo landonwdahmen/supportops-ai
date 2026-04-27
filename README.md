@@ -38,7 +38,9 @@ postman/
 
 ## Current Status
 
-Phase 1 establishes the repository foundation only. There are no controllers, domain entities, data models, migrations, authentication flows, or ticket-triage business rules yet.
+Phase 2 establishes the backend foundation. The solution now includes domain entities, EF Core persistence with PostgreSQL, JWT authentication, initial ticket endpoints, and an initial database migration.
+
+AI triage, RabbitMQ publishing/consuming, worker processing, frontend code, and deployment automation are still intentionally out of scope.
 
 ## Quick Start
 
@@ -47,5 +49,6 @@ Phase 1 establishes the repository foundation only. There are no controllers, do
 3. Restore the solution with `dotnet restore SupportOpsAI.sln`.
 4. Build the solution with `dotnet build SupportOpsAI.sln`.
 5. Run tests with `dotnet test SupportOpsAI.sln`.
+6. Apply migrations with `dotnet dotnet-ef database update --project src/SupportOpsAI.Infrastructure/SupportOpsAI.Infrastructure.csproj --startup-project src/SupportOpsAI.Api/SupportOpsAI.Api.csproj`.
 
 See `SETUP.md` and `TESTING.md` for more detail.

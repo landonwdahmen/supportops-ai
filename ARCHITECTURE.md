@@ -32,6 +32,6 @@ Asynchronous processing and background jobs will live in `SupportOpsAI.Worker`.
 - RabbitMQ for asynchronous messaging
 - OpenAI API for future AI-assisted triage capabilities
 
-## Phase 1 Note
+## Phase 2 Note
 
-This document is intentionally high level until the first functional slices are approved.
+The Phase 2 backend foundation includes domain entities, EF Core configurations, JWT authentication, and basic ticket persistence. AI workflows, messaging, and worker processing remain deferred.

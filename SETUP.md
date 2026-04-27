@@ -19,6 +19,22 @@ dotnet build SupportOpsAI.sln
 dotnet test SupportOpsAI.sln
 ```
 
+## Database Migrations
+
+The initial migration is `20260427190622_InitialCreate`.
+
+Apply migrations to the local PostgreSQL database:
+
+```powershell
+dotnet dotnet-ef database update --project .\src\SupportOpsAI.Infrastructure\SupportOpsAI.Infrastructure.csproj --startup-project .\src\SupportOpsAI.Api\SupportOpsAI.Api.csproj
+```
+
+Create a future migration:
+
+```powershell
+dotnet dotnet-ef migrations add MigrationName --project .\src\SupportOpsAI.Infrastructure\SupportOpsAI.Infrastructure.csproj --startup-project .\src\SupportOpsAI.Api\SupportOpsAI.Api.csproj --output-dir Data\Migrations
+```
+
 ## Running Individual Projects
 
 ```powershell
@@ -29,4 +45,5 @@ dotnet run --project .\src\SupportOpsAI.Worker\SupportOpsAI.Worker.csproj
 ## Notes
 
 - PostgreSQL and RabbitMQ are defined in `docker-compose.yml`
-- Application configuration and real connection wiring will be added in a later phase
+- The API reads the PostgreSQL connection string from `ConnectionStrings:DefaultConnection`
+- JWT values can be overridden with environment variables such as `Jwt__SigningKey`

@@ -8,7 +8,7 @@
 
 ## Current Scope
 
-Phase 1 includes only placeholder test scaffolding to validate solution wiring and CI behavior.
+Phase 2 includes initial tests for domain defaults, auth registration/login, ticket creation/retrieval, and unauthorized ticket access.
 
 ## Commands
 
@@ -18,8 +18,7 @@ dotnet test SupportOpsAI.sln
 
 ## Future Coverage
 
-- Domain unit tests
-- Application service tests
-- Infrastructure integration tests
 - Worker behavior tests
 - API endpoint tests
+- PostgreSQL-backed integration tests
+- RabbitMQ integration tests when messaging is introduced
