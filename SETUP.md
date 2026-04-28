@@ -3,6 +3,7 @@
 ## Prerequisites
 
 - .NET 8 SDK
+- Node.js 20 or later
 - Docker Desktop or another Docker engine with Compose support
 
 ## Local Environment
@@ -47,6 +48,27 @@ dotnet run --project .\src\SupportOpsAI.Api\SupportOpsAI.Api.csproj
 dotnet run --project .\src\SupportOpsAI.Worker\SupportOpsAI.Worker.csproj
 ```
 
+Run the frontend in a third terminal:
+
+```powershell
+cd frontend
+npm install
+npm run dev
+```
+
+The Vite app runs at `http://localhost:5173` by default.
+
+## Frontend Configuration
+
+Copy `frontend/.env.example` to `frontend/.env` if you need to override defaults.
+
+```text
+VITE_API_BASE_URL=/api
+VITE_API_PROXY_TARGET=http://localhost:5116
+```
+
+The frontend calls `VITE_API_BASE_URL`. During local development, Vite proxies `/api` to the API at `VITE_API_PROXY_TARGET`, so the backend does not need extra local CORS setup.
+
 ## Demo API Requests
 
 Repeatable `.http` request files live in `requests/` for VS Code REST Client or the JetBrains Rider HTTP Client. Start Docker services, apply migrations, run the API and worker, then open `requests/full-workflow.http` and run the requests from top to bottom. The smaller `auth.http`, `tickets.http`, and `triage.http` files are useful when testing one part of the backend flow.
@@ -85,6 +107,13 @@ Seeded development accounts:
 - `agent@supportops.local` with role `Agent`
 
 If either password is left blank, that specific development account is skipped.
+
+For the frontend demo, the login page includes quick-fill buttons for:
+
+- customer demo: `customer1@example.com` / `Password123!`
+- agent demo: `agent@supportops.local` / `AgentPassword123!`
+
+Register the customer first if the database does not already contain that account. The agent account is seeded only when the API starts in Development and `DevelopmentSeedAccounts__AgentPassword` is configured.
 
 ## RabbitMQ
 

@@ -13,10 +13,16 @@ obj/
 
 # Environment files
 .env
+frontend/.env
 
 # Test output
 TestResults/
 coverage/
+
+# Frontend
+node_modules/
+dist/
+*.tsbuildinfo
 
 # Logs
 *.log

@@ -12,7 +12,7 @@ SupportOps AI is a backend-focused portfolio project for AI-assisted support tic
 - Messaging: RabbitMQ
 - Background processing: .NET Worker Service
 - AI triage: mock provider by default, OpenAI provider by configuration
-- Frontend: React, TypeScript, and Vite planned for a later phase
+- Frontend: lightweight React, TypeScript, and Vite demo UI
 - Testing: xUnit
 - Containerization: Docker Compose
 
@@ -29,6 +29,7 @@ tests/
   SupportOpsAI.UnitTests
   SupportOpsAI.IntegrationTests
   SupportOpsAI.WorkerTests
+frontend/
 docs/
 scripts/
 requests/
@@ -38,9 +39,9 @@ postman/
 
 ## Current Status
 
-Phase 3 includes domain models, EF Core persistence, JWT authentication, ticket APIs, RabbitMQ queue publishing/consuming, mock/OpenAI AI triage providers, worker processing, and human review endpoints.
+Phase 4 includes domain models, EF Core persistence, JWT authentication, ticket APIs, RabbitMQ queue publishing/consuming, mock/OpenAI AI triage providers, worker processing, human review endpoints, repeatable `.http` requests, and a lightweight React demo UI.
 
-Frontend code, deployment automation, advanced knowledge base search, pgvector, real email notifications, SignalR, and admin dashboard UI are intentionally out of scope.
+Deployment automation, advanced knowledge base search, pgvector, real email notifications, SignalR, and a full admin dashboard UI are intentionally out of scope.
 
 ## Quick Start
 
@@ -52,5 +53,6 @@ Frontend code, deployment automation, advanced knowledge base search, pgvector, 
 6. Run tests with `dotnet test SupportOpsAI.sln`.
 7. Run the API with `dotnet run --project .\src\SupportOpsAI.Api\SupportOpsAI.Api.csproj`.
 8. Run the worker in a second terminal with `dotnet run --project .\src\SupportOpsAI.Worker\SupportOpsAI.Worker.csproj`.
+9. Install and run the frontend from `frontend/` with `npm install` and `npm run dev`.
 
 See `API.md`, `SETUP.md`, and `TESTING.md` for more detail.
