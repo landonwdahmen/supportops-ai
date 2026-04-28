@@ -47,6 +47,41 @@ dotnet run --project .\src\SupportOpsAI.Api\SupportOpsAI.Api.csproj
 dotnet run --project .\src\SupportOpsAI.Worker\SupportOpsAI.Worker.csproj
 ```
 
+## Development Seed Accounts
+
+The API can seed local-only review accounts on startup in the Development environment.
+
+1. Set these values in `.env` before starting the API:
+
+```text
+DevelopmentSeedAccounts__AdminPassword=<your-local-admin-password>
+DevelopmentSeedAccounts__AgentPassword=<your-local-agent-password>
+```
+
+2. Start the API with the Development environment configuration.
+3. Log in through `POST /api/auth/login` with one of these accounts:
+
+```json
+{
+  "email": "admin@supportops.local",
+  "password": "<your-local-admin-password>"
+}
+```
+
+```json
+{
+  "email": "agent@supportops.local",
+  "password": "<your-local-agent-password>"
+}
+```
+
+Seeded development accounts:
+
+- `admin@supportops.local` with role `Admin`
+- `agent@supportops.local` with role `Agent`
+
+If either password is left blank, that specific development account is skipped.
+
 ## RabbitMQ
 
 The API publishes triage messages to `RabbitMQ:TriageQueueName` when tickets are created. The worker consumes that queue and processes messages with a capped retry strategy.

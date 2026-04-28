@@ -10,6 +10,7 @@ using SupportOpsAI.Application.Exceptions;
 using SupportOpsAI.Application.Interfaces;
 using SupportOpsAI.Application.Validation;
 using SupportOpsAI.Infrastructure;
+using SupportOpsAI.Infrastructure.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -38,6 +39,13 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
 builder.Services.AddAuthorization();
 
 var app = builder.Build();
+
+if (app.Environment.IsDevelopment())
+{
+    using var scope = app.Services.CreateScope();
+    var developmentSeedAccountService = scope.ServiceProvider.GetRequiredService<DevelopmentSeedAccountService>();
+    await developmentSeedAccountService.SeedAsync();
+}
 
 app.UseExceptionHandler(errorApp =>
 {
