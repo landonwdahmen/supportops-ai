@@ -1,0 +1,51 @@
+@baseUrl = http://localhost:5116
+@customerEmail = customer1@example.com
+@customerPassword = Password123!
+@agentEmail = agent@supportops.local
+@agentPassword = AgentPassword123!
+@customerToken = replace-with-customer-access-token
+@agentToken = replace-with-agent-access-token
+
+### 1. Health check
+GET {{baseUrl}}/api/health
+
+### 2. Register a customer
+# Run once per email address. If the customer already exists, use Login customer instead.
+POST {{baseUrl}}/api/auth/register
+Content-Type: application/json
+
+{
+  "email": "{{customerEmail}}",
+  "displayName": "Customer One",
+  "password": "{{customerPassword}}",
+  "role": "Customer"
+}
+
+### 3. Login customer
+# Copy accessToken from the response into @customerToken above for authenticated customer calls.
+POST {{baseUrl}}/api/auth/login
+Content-Type: application/json
+
+{
+  "email": "{{customerEmail}}",
+  "password": "{{customerPassword}}"
+}
+
+### 4. Get current customer user
+GET {{baseUrl}}/api/auth/me
+Authorization: Bearer {{customerToken}}
+
+### 5. Login development seed agent
+# Requires the API to run in Development with DevelopmentSeedAccounts__AgentPassword set.
+# Copy accessToken from the response into @agentToken above for triage review calls.
+POST {{baseUrl}}/api/auth/login
+Content-Type: application/json
+
+{
+  "email": "{{agentEmail}}",
+  "password": "{{agentPassword}}"
+}
+
+### 6. Get current agent user
+GET {{baseUrl}}/api/auth/me
+Authorization: Bearer {{agentToken}}

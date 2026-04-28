@@ -1,0 +1,43 @@
+@baseUrl = http://localhost:5116
+@customerEmail = customer1@example.com
+@customerPassword = Password123!
+@customerToken = replace-with-customer-access-token
+@ticketId = replace-with-ticket-id
+
+### Order
+# 1. Run Login customer and copy accessToken into @customerToken.
+# 2. Run Create ticket and copy id from the response into @ticketId.
+# 3. Run List tickets or Get ticket by ID.
+
+### Health check
+GET {{baseUrl}}/api/health
+
+### Login customer
+POST {{baseUrl}}/api/auth/login
+Content-Type: application/json
+
+{
+  "email": "{{customerEmail}}",
+  "password": "{{customerPassword}}"
+}
+
+### Create ticket
+# Creating a ticket also queues a RabbitMQ triage job for the worker.
+POST {{baseUrl}}/api/tickets
+Authorization: Bearer {{customerToken}}
+Content-Type: application/json
+
+{
+  "title": "Cannot access billing dashboard",
+  "description": "I can sign in, but the billing dashboard shows a blank page after the latest invoice email.",
+  "priority": "Medium",
+  "category": "General"
+}
+
+### List tickets
+GET {{baseUrl}}/api/tickets
+Authorization: Bearer {{customerToken}}
+
+### Get ticket by ID
+GET {{baseUrl}}/api/tickets/{{ticketId}}
+Authorization: Bearer {{customerToken}}

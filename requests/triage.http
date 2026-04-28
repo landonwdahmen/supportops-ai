@@ -1,0 +1,59 @@
+@baseUrl = http://localhost:5116
+@agentEmail = agent@supportops.local
+@agentPassword = AgentPassword123!
+@agentToken = replace-with-agent-access-token
+@ticketId = replace-with-ticket-id
+
+### Order
+# 1. Create a ticket as a customer from tickets.http.
+# 2. Wait for the worker to process the queued triage job.
+# 3. Run Login agent and copy accessToken into @agentToken.
+# 4. Run Get triage result.
+# 5. Run one review action: Approve triage, Edit triage, Reject triage, or Retry triage.
+#    Retry is most useful when no triage job is queued or processing and you want to request a new triage run.
+
+### Login agent
+POST {{baseUrl}}/api/auth/login
+Content-Type: application/json
+
+{
+  "email": "{{agentEmail}}",
+  "password": "{{agentPassword}}"
+}
+
+### Get triage result
+GET {{baseUrl}}/api/tickets/{{ticketId}}/triage
+Authorization: Bearer {{agentToken}}
+
+### Approve triage
+POST {{baseUrl}}/api/tickets/{{ticketId}}/triage/approve
+Authorization: Bearer {{agentToken}}
+Content-Type: application/json
+
+{
+  "notes": "Recommendation looks correct for the demo ticket."
+}
+
+### Edit triage
+POST {{baseUrl}}/api/tickets/{{ticketId}}/triage/edit
+Authorization: Bearer {{agentToken}}
+Content-Type: application/json
+
+{
+  "category": "Technical",
+  "priority": "High",
+  "notes": "Adjusted after agent review."
+}
+
+### Reject triage
+POST {{baseUrl}}/api/tickets/{{ticketId}}/triage/reject
+Authorization: Bearer {{agentToken}}
+Content-Type: application/json
+
+{
+  "reason": "Recommendation does not match the ticket details."
+}
+
+### Retry triage
+POST {{baseUrl}}/api/tickets/{{ticketId}}/triage/retry
+Authorization: Bearer {{agentToken}}

@@ -47,6 +47,10 @@ dotnet run --project .\src\SupportOpsAI.Api\SupportOpsAI.Api.csproj
 dotnet run --project .\src\SupportOpsAI.Worker\SupportOpsAI.Worker.csproj
 ```
 
+## Demo API Requests
+
+Repeatable `.http` request files live in `requests/` for VS Code REST Client or the JetBrains Rider HTTP Client. Start Docker services, apply migrations, run the API and worker, then open `requests/full-workflow.http` and run the requests from top to bottom. The smaller `auth.http`, `tickets.http`, and `triage.http` files are useful when testing one part of the backend flow.
+
 ## Development Seed Accounts
 
 The API can seed local-only review accounts on startup in the Development environment.
