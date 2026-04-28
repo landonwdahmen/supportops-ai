@@ -2,19 +2,19 @@
 
 ## Overview
 
-SupportOps AI is a backend-focused portfolio project for exploring AI-assisted support ticket triage. This repository is currently in Phase 1 and intentionally contains only solution scaffolding, project structure, documentation placeholders, and local infrastructure setup.
+SupportOps AI is a backend-focused portfolio project for AI-assisted support ticket triage. Phase 3 adds asynchronous triage processing: ticket creation queues a RabbitMQ message, the worker consumes it, the configured AI provider produces a recommendation, and support staff can review that recommendation.
 
 ## Tech Stack
 
 - Backend: ASP.NET Core Web API with C#
 - Application architecture: Clean Architecture-inspired project layering
-- Database: PostgreSQL with Entity Framework Core planned for a later phase
+- Database: PostgreSQL with Entity Framework Core
 - Messaging: RabbitMQ
 - Background processing: .NET Worker Service
+- AI triage: mock provider by default, OpenAI provider by configuration
 - Frontend: React, TypeScript, and Vite planned for a later phase
 - Testing: xUnit
 - Containerization: Docker Compose
-- AI provider: OpenAI API planned for a later phase
 
 ## Repository Structure
 
@@ -38,17 +38,19 @@ postman/
 
 ## Current Status
 
-Phase 2 establishes the backend foundation. The solution now includes domain entities, EF Core persistence with PostgreSQL, JWT authentication, initial ticket endpoints, and an initial database migration.
+Phase 3 includes domain models, EF Core persistence, JWT authentication, ticket APIs, RabbitMQ queue publishing/consuming, mock/OpenAI AI triage providers, worker processing, and human review endpoints.
 
-AI triage, RabbitMQ publishing/consuming, worker processing, frontend code, and deployment automation are still intentionally out of scope.
+Frontend code, deployment automation, advanced knowledge base search, pgvector, real email notifications, SignalR, and admin dashboard UI are intentionally out of scope.
 
 ## Quick Start
 
 1. Copy `.env.example` to `.env`.
 2. Start local infrastructure with `docker compose up -d`.
-3. Restore the solution with `dotnet restore SupportOpsAI.sln`.
-4. Build the solution with `dotnet build SupportOpsAI.sln`.
-5. Run tests with `dotnet test SupportOpsAI.sln`.
-6. Apply migrations with `dotnet dotnet-ef database update --project src/SupportOpsAI.Infrastructure/SupportOpsAI.Infrastructure.csproj --startup-project src/SupportOpsAI.Api/SupportOpsAI.Api.csproj`.
+3. Restore with `dotnet restore SupportOpsAI.sln --configfile NuGet.Config`.
+4. Build with `dotnet build SupportOpsAI.sln`.
+5. Apply migrations with `dotnet dotnet-ef database update --project src/SupportOpsAI.Infrastructure/SupportOpsAI.Infrastructure.csproj --startup-project src/SupportOpsAI.Api/SupportOpsAI.Api.csproj`.
+6. Run tests with `dotnet test SupportOpsAI.sln`.
+7. Run the API with `dotnet run --project .\src\SupportOpsAI.Api\SupportOpsAI.Api.csproj`.
+8. Run the worker in a second terminal with `dotnet run --project .\src\SupportOpsAI.Worker\SupportOpsAI.Worker.csproj`.
 
-See `SETUP.md` and `TESTING.md` for more detail.
+See `API.md`, `SETUP.md`, and `TESTING.md` for more detail.

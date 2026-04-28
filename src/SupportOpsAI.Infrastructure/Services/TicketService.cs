@@ -1,7 +1,9 @@
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 using SupportOpsAI.Application.DTOs.Tickets;
 using SupportOpsAI.Application.Exceptions;
 using SupportOpsAI.Application.Interfaces;
+using SupportOpsAI.Application.Messaging;
 using SupportOpsAI.Domain.Entities;
 using SupportOpsAI.Domain.Enums;
 using SupportOpsAI.Infrastructure.Data;
@@ -11,7 +13,9 @@ namespace SupportOpsAI.Infrastructure.Services;
 public class TicketService(
     SupportOpsDbContext dbContext,
     ICurrentUserService currentUserService,
-    IAuditLogService auditLogService) : ITicketService
+    IAuditLogService auditLogService,
+    ITriageQueuePublisher triageQueuePublisher,
+    ILogger<TicketService> logger) : ITicketService
 {
     public async Task<TicketResponse> CreateAsync(CreateTicketRequest request, CancellationToken cancellationToken = default)
     {
@@ -26,9 +30,32 @@ public class TicketService(
             CreatedByUserId = userId
         };
 
+        var job = new TriageJob
+        {
+            TicketId = ticket.Id,
+            Status = TriageJobStatus.Queued,
+            CorrelationId = Guid.NewGuid().ToString("N")
+        };
+
         dbContext.Tickets.Add(ticket);
+        dbContext.TriageJobs.Add(job);
         await dbContext.SaveChangesAsync(cancellationToken);
         await auditLogService.RecordAsync(AuditEventType.TicketCreated, "Ticket created.", userId, ticket.Id, cancellationToken);
+        await auditLogService.RecordAsync(AuditEventType.TriageJobQueued, "Triage job queued.", userId, ticket.Id, cancellationToken);
+
+        try
+        {
+            await triageQueuePublisher.PublishAsync(TriageJobMessage.Create(job.Id, ticket.Id, 1, job.CorrelationId), cancellationToken);
+        }
+        catch (Exception exception)
+        {
+            job.Status = TriageJobStatus.Failed;
+            job.LastError = exception.Message;
+            job.ErrorMessage = exception.Message;
+            await dbContext.SaveChangesAsync(cancellationToken);
+            await auditLogService.RecordAsync(AuditEventType.TriageJobFailed, "Triage job publish failed.", userId, ticket.Id, cancellationToken);
+            logger.LogWarning(exception, "Ticket {TicketId} was created, but publishing triage job {TriageJobId} failed.", ticket.Id, job.Id);
+        }
 
         return MapTicket(ticket);
     }

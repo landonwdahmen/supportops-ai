@@ -2,7 +2,7 @@
 
 ## Current Status
 
-The API now exposes the initial Phase 2 authentication, ticket, and health endpoints. Endpoints that create or read tickets require a JWT bearer token unless noted otherwise.
+The API exposes authentication, ticket, health, and Phase 3 triage review endpoints. Ticket and triage endpoints require a JWT bearer token unless noted otherwise.
 
 ## Endpoints
 
@@ -13,6 +13,11 @@ The API now exposes the initial Phase 2 authentication, ticket, and health endpo
 - `GET /api/tickets`
 - `GET /api/tickets/{id}`
 - `POST /api/tickets/{id}/comments`
+- `GET /api/tickets/{id}/triage`
+- `POST /api/tickets/{id}/triage/approve`
+- `POST /api/tickets/{id}/triage/edit`
+- `POST /api/tickets/{id}/triage/reject`
+- `POST /api/tickets/{id}/triage/retry`
 - `GET /api/health`
 
 ## Authentication
@@ -23,13 +28,19 @@ The API now exposes the initial Phase 2 authentication, ticket, and health endpo
 Authorization: Bearer <accessToken>
 ```
 
-## Ticket Behavior
+## Triage Workflow
 
-Ticket creation persists a ticket with `PendingTriage` status. It does not publish RabbitMQ messages, start worker processing, or call any AI provider yet.
+Ticket creation saves a ticket as `PendingTriage`, creates a queued `TriageJob`, and publishes a RabbitMQ message. The worker consumes the message, runs the configured AI triage provider, stores a `TicketTriageResult`, marks the job `Completed`, and updates the ticket to `TriageCompleted`.
+
+## Human Review
+
+Customers can view triage results for their own or assigned tickets. `Agent` and `Admin` users can approve, edit, reject, or retry triage.
+
+Approving applies the AI category and priority to the ticket. Editing applies reviewer-selected category and priority. Rejecting marks the recommendation rejected with notes. Retrying creates and publishes a new triage job when no job is queued or processing.
 
 ## Deferred Decisions
 
 - Error contract format
 - API versioning strategy
 - Pagination and filtering shape
-- AI triage workflow endpoints
+- Advanced AI prompt design and knowledge base search

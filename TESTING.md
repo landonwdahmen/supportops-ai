@@ -8,7 +8,7 @@
 
 ## Current Scope
 
-Phase 2 includes initial tests for domain defaults, auth registration/login, ticket creation/retrieval, and unauthorized ticket access.
+Phase 3 includes tests for domain defaults, auth registration/login, ticket creation/retrieval, triage job creation/publishing, mock AI output, worker-style processing, failed AI triage handling, and human review authorization/actions.
 
 ## Commands
 
@@ -16,9 +16,11 @@ Phase 2 includes initial tests for domain defaults, auth registration/login, tic
 dotnet test SupportOpsAI.sln
 ```
 
+Automated tests use fakes and the mock AI provider. They do not require a real OpenAI API call.
+
 ## Future Coverage
 
-- Worker behavior tests
 - API endpoint tests
 - PostgreSQL-backed integration tests
-- RabbitMQ integration tests when messaging is introduced
+- RabbitMQ integration tests
+- OpenAI contract tests with mocked HTTP responses

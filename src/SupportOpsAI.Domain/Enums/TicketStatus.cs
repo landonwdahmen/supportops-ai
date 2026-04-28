@@ -6,6 +6,7 @@ public enum TicketStatus
     PendingTriage = 1,
     Open = 2,
     InProgress = 3,
-    Resolved = 4,
-    Closed = 5
+    TriageCompleted = 4,
+    Resolved = 5,
+    Closed = 6
 }

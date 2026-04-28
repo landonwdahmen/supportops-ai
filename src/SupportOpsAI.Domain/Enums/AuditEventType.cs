@@ -10,5 +10,11 @@ public enum AuditEventType
     TicketAssigned = 5,
     TicketStatusChanged = 6,
     TriageRequested = 7,
-    TriageCompleted = 8
+    TriageJobQueued = 8,
+    TriageJobFailed = 9,
+    TriageCompleted = 10,
+    TriageApproved = 11,
+    TriageEdited = 12,
+    TriageRejected = 13,
+    TriageRetried = 14
 }

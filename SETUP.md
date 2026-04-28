@@ -14,16 +14,19 @@
 ## Solution Commands
 
 ```powershell
-dotnet restore SupportOpsAI.sln
+dotnet restore SupportOpsAI.sln --configfile NuGet.Config
 dotnet build SupportOpsAI.sln
 dotnet test SupportOpsAI.sln
 ```
 
 ## Database Migrations
 
-The initial migration is `20260427190622_InitialCreate`.
+Current migrations:
 
-Apply migrations to the local PostgreSQL database:
+- `20260427190622_InitialCreate`
+- `20260428025556_AddPhase3TriageWorkflow`
+
+Apply migrations:
 
 ```powershell
 dotnet dotnet-ef database update --project .\src\SupportOpsAI.Infrastructure\SupportOpsAI.Infrastructure.csproj --startup-project .\src\SupportOpsAI.Api\SupportOpsAI.Api.csproj
@@ -35,15 +38,48 @@ Create a future migration:
 dotnet dotnet-ef migrations add MigrationName --project .\src\SupportOpsAI.Infrastructure\SupportOpsAI.Infrastructure.csproj --startup-project .\src\SupportOpsAI.Api\SupportOpsAI.Api.csproj --output-dir Data\Migrations
 ```
 
-## Running Individual Projects
+## Running Locally
+
+Run the API and worker in separate terminals:
 
 ```powershell
 dotnet run --project .\src\SupportOpsAI.Api\SupportOpsAI.Api.csproj
 dotnet run --project .\src\SupportOpsAI.Worker\SupportOpsAI.Worker.csproj
 ```
 
+## RabbitMQ
+
+The API publishes triage messages to `RabbitMQ:TriageQueueName` when tickets are created. The worker consumes that queue and processes messages with a capped retry strategy.
+
+Default queue:
+
+```text
+supportops.triage.jobs
+```
+
+RabbitMQ Management UI is available at `http://localhost:15672` with local credentials from `.env`.
+
+## AI Provider
+
+Local development and automated tests use the mock provider by default:
+
+```text
+AiTriage__Provider=Mock
+```
+
+To use OpenAI locally:
+
+```text
+AiTriage__Provider=OpenAI
+OpenAI__ApiKey=<your-api-key>
+OpenAI__Model=gpt-4o-mini
+```
+
+Do not commit real API keys.
+
 ## Notes
 
-- PostgreSQL and RabbitMQ are defined in `docker-compose.yml`
-- The API reads the PostgreSQL connection string from `ConnectionStrings:DefaultConnection`
-- JWT values can be overridden with environment variables such as `Jwt__SigningKey`
+- PostgreSQL and RabbitMQ are defined in `docker-compose.yml`.
+- The API and worker read PostgreSQL from `ConnectionStrings:DefaultConnection`.
+- JWT values can be overridden with environment variables such as `Jwt__SigningKey`.
+- RabbitMQ and OpenAI settings can be overridden with `RabbitMQ__*`, `AiTriage__Provider`, and `OpenAI__*`.

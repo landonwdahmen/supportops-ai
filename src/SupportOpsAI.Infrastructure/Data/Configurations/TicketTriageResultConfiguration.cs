@@ -16,6 +16,8 @@ public class TicketTriageResultConfiguration : IEntityTypeConfiguration<TicketTr
         builder.Property(x => x.ReviewStatus).HasConversion<string>().HasMaxLength(32).IsRequired();
         builder.Property(x => x.Summary).HasMaxLength(2000).IsRequired();
         builder.Property(x => x.Reasoning).HasMaxLength(4000).IsRequired();
+        builder.Property(x => x.SuggestedSteps).HasMaxLength(4000).IsRequired();
+        builder.Property(x => x.ReviewNotes).HasMaxLength(2000);
         builder.Property(x => x.CreatedAt).IsRequired();
 
         builder.HasOne(x => x.Ticket)
@@ -23,6 +25,12 @@ public class TicketTriageResultConfiguration : IEntityTypeConfiguration<TicketTr
             .HasForeignKey(x => x.TicketId)
             .OnDelete(DeleteBehavior.Cascade);
 
+        builder.HasOne(x => x.ReviewedByUser)
+            .WithMany()
+            .HasForeignKey(x => x.ReviewedByUserId)
+            .OnDelete(DeleteBehavior.SetNull);
+
         builder.HasIndex(x => x.TicketId);
+        builder.HasIndex(x => x.ReviewStatus);
     }
 }

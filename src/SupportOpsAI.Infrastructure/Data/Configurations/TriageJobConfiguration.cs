@@ -11,8 +11,10 @@ public class TriageJobConfiguration : IEntityTypeConfiguration<TriageJob>
         builder.ToTable("triage_jobs");
         builder.HasKey(x => x.Id);
 
+        builder.Property(x => x.CorrelationId).HasMaxLength(64).IsRequired();
         builder.Property(x => x.Status).HasConversion<string>().HasMaxLength(32).IsRequired();
         builder.Property(x => x.ErrorMessage).HasMaxLength(2000);
+        builder.Property(x => x.LastError).HasMaxLength(2000);
         builder.Property(x => x.CreatedAt).IsRequired();
 
         builder.HasOne(x => x.Ticket)
@@ -21,6 +23,7 @@ public class TriageJobConfiguration : IEntityTypeConfiguration<TriageJob>
             .OnDelete(DeleteBehavior.Cascade);
 
         builder.HasIndex(x => x.TicketId);
+        builder.HasIndex(x => x.CorrelationId);
         builder.HasIndex(x => x.Status);
     }
 }

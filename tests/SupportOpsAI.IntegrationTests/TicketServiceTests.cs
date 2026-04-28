@@ -1,4 +1,5 @@
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging.Abstractions;
 using SupportOpsAI.Application.DTOs.Tickets;
 using SupportOpsAI.Application.Exceptions;
 using SupportOpsAI.Domain.Entities;
@@ -17,7 +18,8 @@ public class TicketServiceTests
         await using var dbContext = CreateDbContext();
         var user = await AddUserAsync(dbContext, "customer@example.com");
         var currentUser = new FakeCurrentUserService { UserId = user.Id, Email = user.Email, Role = user.Role };
-        var service = CreateService(dbContext, currentUser);
+        var publisher = new FakeTriageQueuePublisher();
+        var service = CreateService(dbContext, currentUser, publisher);
 
         var response = await service.CreateAsync(new CreateTicketRequest(
             "Cannot access billing page",
@@ -28,6 +30,8 @@ public class TicketServiceTests
         Assert.Equal(TicketStatus.PendingTriage, response.Status);
         Assert.Equal(user.Id, response.CreatedByUserId);
         Assert.Equal(1, await dbContext.Tickets.CountAsync());
+        Assert.Equal(1, await dbContext.TriageJobs.CountAsync());
+        Assert.Single(publisher.PublishedMessages);
     }
 
     [Fact]
@@ -91,8 +95,16 @@ public class TicketServiceTests
         return user;
     }
 
-    private static TicketService CreateService(SupportOpsDbContext dbContext, FakeCurrentUserService currentUser)
+    private static TicketService CreateService(
+        SupportOpsDbContext dbContext,
+        FakeCurrentUserService currentUser,
+        FakeTriageQueuePublisher? publisher = null)
     {
-        return new TicketService(dbContext, currentUser, new AuditLogService(dbContext));
+        return new TicketService(
+            dbContext,
+            currentUser,
+            new AuditLogService(dbContext),
+            publisher ?? new FakeTriageQueuePublisher(),
+            NullLogger<TicketService>.Instance);
     }
 }
