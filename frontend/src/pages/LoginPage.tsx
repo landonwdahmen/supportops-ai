@@ -37,12 +37,13 @@ export function LoginPage() {
         <p className="eyebrow">Demo access</p>
         <h1>Log in</h1>
         <p className="muted">Use a registered customer account, or the seeded development agent account.</p>
+        <p className="muted">Demo credentials are for local development only.</p>
         <div className="quick-actions">
           <button className="button button-secondary" type="button" onClick={() => { setEmail(customerDemo.email); setPassword(customerDemo.password); }}>
-            Customer demo
+            Local demo customer
           </button>
           <button className="button button-secondary" type="button" onClick={() => { setEmail(agentDemo.email); setPassword(agentDemo.password); }}>
-            Agent demo
+            Local demo agent
           </button>
         </div>
         <StatusMessage message={error} tone="error" />
