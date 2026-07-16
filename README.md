@@ -122,14 +122,45 @@ See [docs/demo-walkthrough.md](docs/demo-walkthrough.md) for a step-by-step walk
 
 ## Screenshots
 
-Screenshots are planned for the portfolio README once final demo captures are selected:
+The demo UI includes local-only Customer and Agent login helpers for quickly testing the workflow.
 
-- Login page
-- Ticket list
-- Create ticket
-- Ticket detail
-- AI triage result
-- Agent approval flow
+![Local demo login](docs/screenshots/01-login-demo-access.png)
+
+### Customer ticket queue
+
+Customers can view the tickets they created and track their triage status.
+
+![Customer ticket list](docs/screenshots/02-customer-ticket-list.png)
+
+### Create ticket
+
+Customers submit a support request with an initial priority and category. Creating the ticket queues an asynchronous triage job.
+
+![Create ticket form](docs/screenshots/03-create-ticket-form.png)
+
+### AI triage recommendation
+
+After the worker processes the queued job, the ticket shows an AI-generated triage recommendation with category, priority, confidence, reasoning, and suggested next steps.
+
+![AI triage recommendation pending review](docs/screenshots/04-ticket-detail-pending-triage-review.png)
+
+### Agent ticket queue
+
+Support agents can view the support queue and open tickets that need review.
+
+![Agent ticket list](docs/screenshots/05-agent-ticket-list.png)
+
+### Agent review actions
+
+Agents can approve, edit and apply, reject, or retry the AI triage recommendation.
+
+![Agent review actions](docs/screenshots/06-agent-review-actions.png)
+
+### Approved triage
+
+Once approved, the AI recommendation is applied to the ticket and the review status is recorded.
+
+![Approved triage result](docs/screenshots/07-ticket-detail-approved-triage.png)
 
 See [docs/screenshots/README.md](docs/screenshots/README.md) for the capture checklist.
 
