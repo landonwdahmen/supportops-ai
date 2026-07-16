@@ -122,6 +122,8 @@ See [docs/demo-walkthrough.md](docs/demo-walkthrough.md) for a step-by-step walk
 
 ## Screenshots
 
+### Local demo login
+
 The demo UI includes local-only Customer and Agent login helpers for quickly testing the workflow.
 
 ![Local demo login](docs/screenshots/01-login-demo-access.png)
