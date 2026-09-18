@@ -2,7 +2,7 @@
 
 ## Current Status
 
-The API exposes authentication, ticket, health, and Phase 3 triage review endpoints. Ticket and triage endpoints require a JWT bearer token unless noted otherwise.
+The API exposes authentication, ticket, health, and triage review endpoints. Ticket and triage endpoints require a JWT bearer token unless noted otherwise.
 
 ## Endpoints
 
@@ -38,9 +38,10 @@ Customers can view triage results for their own or assigned tickets. `Agent` and
 
 Approving applies the AI category and priority to the ticket. Editing applies reviewer-selected category and priority. Rejecting marks the recommendation rejected with notes. Retrying creates and publishes a new triage job when no job is queued or processing.
 
-## Deferred Decisions
+## Current Limits and Potential Enhancements
 
-- Error contract format
-- API versioning strategy
-- Pagination and filtering shape
-- Advanced AI prompt design and knowledge base search
+The exception handler returns an `error` array for handled service and validation exceptions, with status codes for bad requests, unauthorized or forbidden access, missing resources, conflicts, and unexpected failures. Framework-generated model-binding and authentication responses may use different formats.
+
+Ticket listing returns an unpaginated list, newest first, limited by the caller's access. There are no pagination or filter query parameters.
+
+Consistent error responses across all HTTP failure paths, API versioning, pagination and query filtering, and knowledge-base search are optional future enhancements, not unfinished requirements for the portfolio version.

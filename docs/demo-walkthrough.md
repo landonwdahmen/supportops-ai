@@ -1,6 +1,8 @@
 # Demo Walkthrough
 
-This walkthrough shows the local Phase 4 demo flow from infrastructure startup through customer ticket creation and agent triage review.
+This walkthrough shows the local demo flow from infrastructure startup through customer ticket creation and agent triage review.
+
+Complete the prerequisites, local tool restore, and backend environment configuration in [SETUP.md](../SETUP.md) first, including the development agent password for the review demo.
 
 ## Start Docker
 
@@ -71,7 +73,7 @@ Expected result:
 
 1. Wait briefly for the worker to process the queued triage job.
 2. Log out of the customer account.
-3. Use the local/demo-only agent credential button.
+3. Use the local/demo-only agent credential button, replacing the autofilled password if your configured seed password differs.
 4. Log in as the agent.
 5. Open the ticket list and select the customer ticket.
 6. Review the AI triage recommendation on the ticket detail page.
@@ -82,7 +84,7 @@ Expected result:
 - The ticket detail page shows the AI-generated category, priority, confidence, summary, and rationale.
 - Agent-only review controls are available for triage decisions.
 - Approved or edited recommendations update the ticket review state.
-- Rejected recommendations remain visible as rejected review history.
+- The latest recommendation shows its rejected status and review notes after rejection.
 
 ## Expected End-to-End Result
 

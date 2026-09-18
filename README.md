@@ -62,7 +62,7 @@ Prerequisites:
 Setup steps:
 
 1. Copy `.env.example` to `.env`.
-2. Review the local PostgreSQL, RabbitMQ, JWT, and development seed account settings.
+2. Review the local PostgreSQL, RabbitMQ, JWT, and development seed account settings. The .NET hosts do not automatically load `.env`; set backend overrides and seed passwords as described in [SETUP.md](SETUP.md#local-environment).
 3. Start infrastructure:
 
 ```powershell
@@ -76,9 +76,10 @@ dotnet restore SupportOpsAI.sln --configfile NuGet.Config
 dotnet build SupportOpsAI.sln
 ```
 
-5. Apply database migrations:
+5. Restore the local EF tool and apply database migrations:
 
 ```powershell
+dotnet tool restore --configfile NuGet.Config
 dotnet dotnet-ef database update --project .\src\SupportOpsAI.Infrastructure\SupportOpsAI.Infrastructure.csproj --startup-project .\src\SupportOpsAI.Api\SupportOpsAI.Api.csproj
 ```
 

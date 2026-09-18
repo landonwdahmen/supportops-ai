@@ -16,7 +16,6 @@ The API layer is the HTTP boundary for the system. It owns:
 - JWT bearer authentication wiring
 - Request-time current-user access through `CurrentUserService`
 - API host configuration and dependency registration
-- Development-time Swagger launch support
 
 The API delegates workflow behavior to application contracts implemented by Infrastructure. It should not contain domain business rules or persistence details.
 
@@ -112,7 +111,7 @@ Agents and admins can review AI triage results through the API and frontend demo
 - Approving the recommendation
 - Editing the recommendation before approval
 - Rejecting the recommendation
-- Retrying failed or rejected triage work
+- Retrying triage when no job is queued or processing
 
 Human review keeps the AI-assisted workflow accountable. The system presents a recommendation, but the support agent makes the final operational decision.
 
@@ -132,7 +131,7 @@ Entity Framework Core manages schema migrations in:
 src/SupportOpsAI.Infrastructure/Data/Migrations
 ```
 
-Current local migrations include the initial schema and the triage workflow schema. The database schema should change only when a documented project phase requires it.
+Current local migrations include the initial schema and the triage workflow schema. Future schema changes should accompany a documented feature or maintenance need.
 
 ## Frontend Demo
 
@@ -147,4 +146,4 @@ The frontend is a React, TypeScript, and Vite demo app. It provides enough UI to
 - Triage result display
 - Agent review actions
 
-The frontend is intentionally lightweight and should remain demo-focused until a later phase expands product scope.
+The frontend is intentionally lightweight and scoped to the completed portfolio demo. Further product capabilities are optional enhancements.

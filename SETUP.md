@@ -12,6 +12,8 @@
 2. Review environment values and adjust credentials if needed.
 3. Start infrastructure services with `docker compose up -d`.
 
+Docker Compose reads the root `.env` file. The API, worker, and EF tooling do not load it automatically. Set backend overrides as process environment variables in the PowerShell terminal that launches each command, using the existing names in `.env.example`. For example, if you change PostgreSQL credentials or ports, set `ConnectionStrings__DefaultConnection` for migrations, the API, and the worker; set matching `RabbitMQ__*` overrides for the API and worker. The checked-in Development settings match the default local infrastructure values.
+
 ## Solution Commands
 
 ```powershell
@@ -27,9 +29,10 @@ Current migrations:
 - `20260427190622_InitialCreate`
 - `20260428025556_AddPhase3TriageWorkflow`
 
-Apply migrations:
+Restore the repository's local EF tool, then apply migrations:
 
 ```powershell
+dotnet tool restore --configfile NuGet.Config
 dotnet dotnet-ef database update --project .\src\SupportOpsAI.Infrastructure\SupportOpsAI.Infrastructure.csproj --startup-project .\src\SupportOpsAI.Api\SupportOpsAI.Api.csproj
 ```
 
@@ -77,11 +80,11 @@ Repeatable `.http` request files live in `requests/` for VS Code REST Client or 
 
 The API can seed local-only review accounts on startup in the Development environment.
 
-1. Set these values in `.env` before starting the API:
+1. Set these process environment variables in the API terminal before starting the API:
 
-```text
-DevelopmentSeedAccounts__AdminPassword=<your-local-admin-password>
-DevelopmentSeedAccounts__AgentPassword=<your-local-agent-password>
+```powershell
+$env:DevelopmentSeedAccounts__AdminPassword = '<your-local-admin-password>'
+$env:DevelopmentSeedAccounts__AgentPassword = '<your-local-agent-password>'
 ```
 
 2. Start the API with the Development environment configuration.
@@ -113,7 +116,7 @@ For the frontend demo, the login page includes quick-fill buttons for:
 - customer demo: `customer1@example.com` / `Password123!`
 - agent demo: `agent@supportops.local` / `AgentPassword123!`
 
-Register the customer first if the database does not already contain that account. The agent account is seeded only when the API starts in Development and `DevelopmentSeedAccounts__AgentPassword` is configured.
+Register the customer first if the database does not already contain that account. The agent account is seeded only when the API starts in Development and `DevelopmentSeedAccounts__AgentPassword` is configured. If your configured agent password differs from the quick-fill value, replace the autofilled password before logging in.
 
 ## RabbitMQ
 
@@ -129,18 +132,18 @@ RabbitMQ Management UI is available at `http://localhost:15672` with local crede
 
 ## AI Provider
 
-Local development and automated tests use the mock provider by default:
+Local development uses the mock provider by default, and automated tests use fake/mock providers. To explicitly select Mock in the worker terminal:
 
-```text
-AiTriage__Provider=Mock
+```powershell
+$env:AiTriage__Provider = 'Mock'
 ```
 
-To use OpenAI locally:
+To use OpenAI locally, set these process environment variables in the worker terminal before starting the worker:
 
-```text
-AiTriage__Provider=OpenAI
-OpenAI__ApiKey=<your-api-key>
-OpenAI__Model=gpt-4o-mini
+```powershell
+$env:AiTriage__Provider = 'OpenAI'
+$env:OpenAI__ApiKey = '<your-api-key>'
+$env:OpenAI__Model = 'gpt-4o-mini'
 ```
 
 Do not commit real API keys.
