@@ -1,5 +1,7 @@
 # SupportOps AI
 
+**Developed independently by Landon Dahmen.**
+
 SupportOps AI is a portfolio project that demonstrates an AI-assisted support ticket triage workflow built with ASP.NET Core, PostgreSQL, RabbitMQ, a .NET worker service, and a React demo frontend.
 
 The project models a realistic support operations flow: customers create tickets, the backend queues triage work, a background worker generates an AI recommendation, and a human support agent reviews the result before it affects the ticket.
